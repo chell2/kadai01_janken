@@ -18,6 +18,12 @@ function doPost(e) {
 
       if (userState === 'Registering') {
         // 登録中の処理
+        // メッセージを改行ごとに分割
+        const all_msg = userText.split('\n');
+        const sheet =
+          SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Bars');
+        const now = new Date();
+        sheet.appendRow(all_msg);
         sendReply(reply_token, '登録完了！');
         saveUserState(userId, null);
       } else if (userState === 'Searching') {
