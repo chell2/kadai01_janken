@@ -23,7 +23,8 @@ function doPost(e) {
         const sheet =
           SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Bars');
         const now = new Date();
-        sheet.appendRow(all_msg);
+        const row = [userId, all_msg[0], all_msg[1], all_msg[2], now];
+        sheet.appendRow(row);
         sendReply(reply_token, '登録完了！');
         saveUserState(userId, null);
       } else if (userState === 'Searching') {
