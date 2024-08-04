@@ -48,13 +48,10 @@ function doPost(e) {
             saveUserState(userId, 'Searching');
             break;
           case 'ひとり':
-            sendReply(reply_token, 'さくっと結果を表示');
-            break;
           case 'ふたり':
-            sendReply(reply_token, 'しっぽり結果を表示');
-            break;
           case 'みんな':
-            sendReply(reply_token, 'わいわい結果を表示');
+            const result_number = searchBars(userText, userId);
+            sendReply(reply_token, result_number);
             break;
           default:
             sendReply(
@@ -66,52 +63,4 @@ function doPost(e) {
       }
     }
   }
-}
-
-function searchBars(query, userId) {
-  const sheet =
-    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(BARS_SHEET_NAME);
-  const data = sheet.getDataRange().getValues();
-  let matchingBars = [];
-
-  // 全てのバーを検索
-  data.forEach((row, index) => {
-    if (index === 0) return; // ヘッダー行をスキップ
-    const [registeredUserId, url, number, location, registeredDate] = row;
-
-    // フィルタリング条件
-    if (
-      query.includes(location) ||
-      (number === '1' && query.includes('ひとり')) ||
-      (number === '2' && query.includes('ふたり')) ||
-      (number >= '3' && query.includes('みんな'))
-    ) {
-      matchingBars.push({
-        userId: registeredUserId,
-        url: url,
-        number: number,
-        location: location,
-        registeredDate: registeredDate,
-      });
-    }
-  });
-
-  // ランダムに最大3つの候補を選択
-  const selectedBars = selectRandomBars(matchingBars, 3);
-
-  // 結果を整形
-  let recommendations = '';
-  selectedBars.forEach((bar) => {
-    recommendations += `${bar.url}, 人数: ${bar.number}, 場所: ${
-      bar.location
-    }, 登録日: ${new Date(bar.registeredDate).toLocaleDateString()}\n`;
-  });
-
-  return recommendations || '登録されたお店はありません。';
-}
-
-function selectRandomBars(bars, maxCount) {
-  // ランダムに要素を選ぶ
-  const shuffled = bars.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, maxCount);
 }

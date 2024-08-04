@@ -22,10 +22,13 @@
 ### 3.DEMO
 
 LINE公式アカウントでおともだち登録してください
+- Bot ID:  @409smhit <br>
+<img width="120" alt="MiseLog-logo" src="https://github.com/user-attachments/assets/b288f1b3-c9b0-4b6a-bd12-27925ddc3ad5" width="300">
+<img width="120" alt="MiseLog-QR" src="https://github.com/user-attachments/assets/eb29ccf0-7775-41eb-bd4f-04e6cd7d632b" width="300">
 
 ### 4.作ったアプリケーション用のIDまたはPasswordがある場合
 
-なし
+- なし
 
 ### 5.工夫した点・こだわった点
 
@@ -34,9 +37,9 @@ LINE公式アカウントでおともだち登録してください
 
 ### 6.難しかった点・次回トライしたいこと(又は機能)
 
-- 5に記載のとおり、分岐の整理や時間制限による処理落ちとの戦いに苦心しました。。と思いきや、意外と定数や変数の定義漏れや表記ブレが動かない直接の原因だったのかも。
-- まだうまく動いていないところがあるので、引き続きがんばります。
-- 次回は、本当は今回トライしたかったNode.jsとDBを使ってみたいです。
+- 5に記載のとおり、分岐の整理や時間制限による処理落ちとの戦いに苦心しました。。と思いきや、意外と定数や変数の定義漏れや表記ブレ、数字かテキストかの違いなど基本的なことが動かない直接の原因だったようです。
+- 登録時の入力方法や、結果のカルーセル表示など、もう少し改善する予定です。
+- 次回は、本当は今回トライしたかったNode.jsとDBを使ってみたい。
 
 ### 7.次回ミニ講義で聞きたいこと
 
@@ -47,9 +50,10 @@ LINE公式アカウントでおともだち登録してください
   - GASのプロジェクト履歴が確認しやすくなっていた！
 
 - Miro
-  - [（分岐の流れを整理しました）](https://miro.com/app/board/uXjVKshQe7I=/)
-
+  - 分岐の流れを整理しました[(URL)](https://miro.com/app/board/uXjVKshQe7I=/)<br>
+  <img width="500" alt="分岐の流れ" src="https://github.com/user-attachments/assets/f99a7ec1-2dff-4fbb-a486-5d12ffacc965">
+  
 - 参考記事
-  - 1. [（応答トークン、本当は何分有効なのか問題）](https://qiita.com/kyamamoto9120/items/f38966bbc86600665bb7)
-  - 2. 思い出したら追加します
+  - ローカルでGASの開発を可能にするCLIツールclaspを使ってみた[（URL）](https://qiita.com/zumi0/items/a4dd6e00cad7ee341d77)
+  - その他思い出したら追加します
   
