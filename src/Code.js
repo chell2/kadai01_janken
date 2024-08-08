@@ -10,10 +10,9 @@ function doPost(e) {
     const reply_token = json.events[i].replyToken;
     const userId = json.events[i].source.userId;
     const messageType = json.events[i].message.type;
-    const messageText = json.events[i].message.text;
+    const userText = json.events[i].message.text;
 
     if (messageType === 'text') {
-      const userText = messageText;
       const userState = getUserState(userId);
 
       if (userState === 'Registering') {
@@ -22,16 +21,27 @@ function doPost(e) {
         const all_msg = userText.split('\n');
         const sheet =
           SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Bars');
+        // お店のサムネイル画像のURLを取得
+        const thumbnailUrl = fetchThumbnail(all_msg[0]);
+        // タイトルが長すぎる場合は切り取る
+        const title = fetchTitle(all_msg[0]);
         const now = new Date();
-        const row = [userId, all_msg[0], all_msg[1], all_msg[2], now];
+        const row = [
+          userId,
+          all_msg[0],
+          all_msg[1],
+          all_msg[2],
+          thumbnailUrl,
+          title,
+          now,
+        ];
         sheet.appendRow(row);
         sendReply(reply_token, '登録完了！');
         saveUserState(userId, null);
       } else if (userState === 'Searching') {
         // 場所から検索中の処理
-        const query = messageText;
-        const results = searchBars(query, userId);
-        sendReply(reply_token, results);
+        const carousel = searchBars(userText, userId);
+        sendCarouselMessage(reply_token, carousel);
         saveUserState(userId, null);
       } else {
         // 通常のメッセージ処理
@@ -39,7 +49,7 @@ function doPost(e) {
           case 'きろく':
             sendReply(
               reply_token,
-              'お店のURL、利用したい人数（数字のみ）、場所を順に入力してね'
+              '・お店のURL\n・利用したい人数（数字のみ）\n・場所\nを入力してね！\n\n例えばこんな感じ\n↓ ↓ ↓\nhttp://example.com/\n2\n渋谷'
             );
             saveUserState(userId, 'Registering');
             break;
@@ -50,8 +60,8 @@ function doPost(e) {
           case 'ひとり':
           case 'ふたり':
           case 'みんな':
-            const result_number = searchBars(userText, userId);
-            sendReply(reply_token, result_number);
+            const carousel = searchBars(userText, userId);
+            sendCarouselMessage(reply_token, carousel);
             break;
           default:
             sendReply(

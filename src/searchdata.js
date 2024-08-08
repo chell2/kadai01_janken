@@ -6,7 +6,15 @@ function searchBars(query, userId) {
   // 全てのデータを検索
   data.forEach((row, index) => {
     if (index === 0) return; // ヘッダー行をスキップ
-    const [registeredUserId, url, number, location, registeredDate] = row;
+    const [
+      registeredUserId,
+      url,
+      number,
+      location,
+      thumbnailUrl,
+      title,
+      registeredDate,
+    ] = row;
 
     // フィルタリング条件
     const num = Number(number); // 数値に変換
@@ -21,26 +29,48 @@ function searchBars(query, userId) {
         url: url,
         number: number,
         location: location,
+        thumbnailUrl: thumbnailUrl,
+        title: title,
         registeredDate: registeredDate,
       });
     }
   });
 
   const selectedBars = selectRandomBars(barsArray, 3);
-
-  // 結果を整形
-  let recommendations = '';
-  selectedBars.forEach((bar) => {
-    recommendations += `${bar.url}, 人数: ${bar.number}, 場所: ${
-      bar.location
-    }, 登録日: ${new Date(bar.registeredDate).toLocaleDateString()}\n`;
-  });
-
-  return recommendations || '登録されたお店はありません。';
+  const carouselMessage = createCarouselMessage(selectedBars);
+  return carouselMessage || '登録されたお店はありません。';
 }
 
 function selectRandomBars(bars, maxCount) {
   // ランダムに要素を選ぶ
   const shuffled = bars.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, maxCount);
+}
+
+function createCarouselMessage(matchingBarsArray) {
+  const columns = matchingBarsArray.map((bar) => {
+    return {
+      thumbnailImageUrl: bar.thumbnailUrl,
+      title: bar.title || bar.location,
+      text: `${bar.number}人で行きたい！`, // 想定人数
+      actions: [
+        {
+          type: 'uri',
+          label: 'お店情報はこちら',
+          uri: bar.url,
+        },
+      ],
+    };
+  });
+
+  return {
+    type: 'template',
+    altText: '検索結果',
+    template: {
+      type: 'carousel',
+      columns: columns,
+      imageAspectRatio: 'rectangle',
+      imageSize: 'cover',
+    },
+  };
 }
