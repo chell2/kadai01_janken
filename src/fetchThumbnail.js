@@ -1,7 +1,7 @@
 function fetchThumbnail(url) {
   if (url.includes('instagram.com')) {
     // InstagramのURLの場合、デフォルトのサムネイル画像を返す
-    return DEFAULT_IMAGE_URL;
+    return INSTAGRAM_IMAGE_URL;
   } else {
     // 通常のURLからサムネイル画像を取得
     return fetchAndCacheThumbnail(url);
