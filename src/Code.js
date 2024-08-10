@@ -14,30 +14,37 @@ function doPost(e) {
 
     if (messageType === 'text') {
       const userState = getUserState(userId);
-
       if (userState === 'Registering') {
         // 登録中の処理
         // メッセージを改行ごとに分割
         const all_msg = userText.split('\n');
-        const sheet =
-          SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Bars');
-        // お店のサムネイル画像のURLを取得
-        const thumbnailUrl = fetchThumbnail(all_msg[0]);
-        // タイトルが長すぎる場合は切り取る
-        const title = fetchTitle(all_msg[0]);
-        const now = new Date();
-        const row = [
-          userId,
-          all_msg[0],
-          all_msg[1],
-          all_msg[2],
-          thumbnailUrl,
-          title,
-          now,
-        ];
-        sheet.appendRow(row);
-        sendReply(reply_token, '登録完了！');
-        saveUserState(userId, null);
+        if (all_msg.length < 3) {
+          // 3行未満の場合はエラーメッセージを返す
+          sendReply(
+            reply_token,
+            '何か足りてないかもー\n---\n・お店のURL\n・利用したい人数（数字のみ）\n・場所\n---\nを改行して教えてね！\n例えばこんな感じ\n↓ ↓ ↓\nhttp://example.com/\n2\n渋谷'
+          );
+        } else {
+          const sheet =
+            SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Bars');
+          // お店のサムネイル画像のURLを取得
+          const thumbnailUrl = fetchThumbnail(all_msg[0]);
+          // タイトルが長すぎる場合は切り取る
+          const title = fetchTitle(all_msg[0]);
+          const now = new Date();
+          const row = [
+            userId,
+            all_msg[0],
+            all_msg[1],
+            all_msg[2],
+            thumbnailUrl,
+            title,
+            now,
+          ];
+          sheet.appendRow(row);
+          sendReply(reply_token, 'OK！登録したよー♡');
+          saveUserState(userId, null);
+        }
       } else if (userState === 'Searching') {
         // 場所から検索中の処理
         const carousel = searchBars(userText, userId);
@@ -49,7 +56,7 @@ function doPost(e) {
           case 'きろく':
             sendReply(
               reply_token,
-              '・お店のURL\n・利用したい人数（数字のみ）\n・場所\nを入力してね！\n\n例えばこんな感じ\n↓ ↓ ↓\nhttp://example.com/\n2\n渋谷'
+              '---\n・お店のURL\n・利用したい人数（数字のみ）\n・場所\n---\nを改行して教えてね！\n例えばこんな感じ\n↓ ↓ ↓\nhttp://example.com/\n2\n渋谷'
             );
             saveUserState(userId, 'Registering');
             break;
